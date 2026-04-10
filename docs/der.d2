@@ -1,0 +1,134 @@
+direction: right
+
+Role: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+}
+
+User: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  email: String
+  hashed_password: String
+  is_active: Boolean
+  role_id: Integer {constraint: foreign_key}
+}
+
+Role.id -> User.role_id
+
+Store: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  address: String
+}
+
+Employee: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  position: String
+  store_id: Integer {constraint: foreign_key}
+}
+
+Store.id -> Employee.store_id
+
+Category: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  description: String
+}
+
+Supplier: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  contact_email: String
+}
+
+Product: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  description: String
+  price: Float
+  image_url: String
+  category_id: Integer {constraint: foreign_key}
+  supplier_id: Integer {constraint: foreign_key}
+}
+
+Category.id -> Product.category_id
+Supplier.id -> Product.supplier_id
+
+Promotion: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  discount_percentage: Float
+  start_date: DateTime
+  end_date: DateTime
+}
+
+PromotionProduct: {
+  shape: sql_table
+  promotion_id: Integer {constraint: primary_key; constraint: foreign_key}
+  product_id: Integer {constraint: primary_key; constraint: foreign_key}
+}
+
+Promotion.id -> PromotionProduct.promotion_id
+Product.id -> PromotionProduct.product_id
+
+Inventory: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  product_id: Integer {constraint: foreign_key}
+  store_id: Integer {constraint: foreign_key}
+  quantity: Integer
+}
+
+Product.id -> Inventory.product_id
+Store.id -> Inventory.store_id
+
+Order: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  user_id: Integer {constraint: foreign_key}
+  total_amount: Float
+  created_at: DateTime
+  status: String
+}
+
+User.id -> Order.user_id
+
+OrderItem: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  order_id: Integer {constraint: foreign_key}
+  product_id: Integer {constraint: foreign_key}
+  quantity: Integer
+  unit_price: Float
+}
+
+Order.id -> OrderItem.order_id
+Product.id -> OrderItem.product_id
+
+News: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  title: String
+  content: Text
+  published_at: DateTime
+  image_url: String
+}
+
+ContactMessage: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  email: String
+  subject: String
+  message: Text
+  created_at: DateTime
+}
