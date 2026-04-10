@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
 
-    SECRET_KEY: str = "SUPER_SECRET_KEY_REPLACE_IN_PRODUCTION"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+    SECRET_KEY: str = "MUDE_ME_EM_PROD"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
     DATABASE_URL: str = "sqlite:///./superviva.db"
 
