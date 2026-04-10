@@ -5,14 +5,8 @@ services:
     rootDir: backend
     buildCommand: pip install -e .
     startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    disk:
-      name: superviva-db
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.10.0"
-      - key: DATABASE_URL
-        value: sqlite:////data/superviva.db
