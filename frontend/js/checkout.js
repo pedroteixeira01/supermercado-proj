@@ -1,5 +1,3 @@
-const API_BASE = "http://localhost:8000/api/v1";
-
 document.addEventListener("DOMContentLoaded", () => {
 	if (!localStorage.getItem("token")) {
 		window.location.href = "login.html";

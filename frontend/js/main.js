@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-	loadComponent("header-placeholder", "/components/header.html");
-	loadComponent("footer-placeholder", "/components/footer.html");
+	loadComponent("header-placeholder", "components/header.html");
+	loadComponent("footer-placeholder", "components/footer.html");
 	setupCartPopup();
 
 	const contactForm = document.getElementById("contactForm");
@@ -252,7 +252,7 @@ async function fetchProducts() {
 	const loading = document.getElementById("loading");
 
 	try {
-		const response = await fetch("http://localhost:8000/api/v1/products/");
+		const response = await fetch(`${API_BASE}/products/`);
 		if (!response.ok) throw new Error("Erro ao buscar produtos da API");
 
 		const products = await response.json();
@@ -276,7 +276,7 @@ async function fetchProducts() {
 				product.image_url !== "images/refrigerante.jpg" &&
 				product.image_url !== "images/suco.jpg"
 					? product.image_url
-					: "/images/logo.svg";
+					: "images/logo.svg";
 
 			card.innerHTML = `
                 <img src="${imgSrc}" alt="${product.name}" class="product-img">
