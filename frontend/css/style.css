@@ -941,6 +941,56 @@ footer {
     overflow-x: auto;
 }
 
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.admin-tab:hover {
+    color: var(--primary-color);
+}
+
+.admin-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.role-badge--admin {
+    background: #fde8d0;
+    color: #d35400;
+}
+
+.role-badge--user {
+    background: #d4edda;
+    color: #155724;
+}
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;

@@ -29,7 +29,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    from app.api.v1.endpoints import auth, orders, products
+    from app.api.v1.endpoints import auth, orders, products, users
 
     app.include_router(
         products.router, prefix=f"{settings.API_V1_STR}/products", tags=["products"]
@@ -37,6 +37,9 @@ def create_app() -> FastAPI:
     app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
     app.include_router(
         orders.router, prefix=f"{settings.API_V1_STR}/orders", tags=["orders"]
+    )
+    app.include_router(
+        users.router, prefix=f"{settings.API_V1_STR}/users", tags=["users"]
     )
 
     return app

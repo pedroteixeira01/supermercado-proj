@@ -1,189 +1,423 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - Supermercado Viva</title>
-    <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <div id="header-placeholder"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Painel Administrativo - Supermercado Viva</title>
+        <link rel="icon" href="/images/logo.svg" type="image/svg+xml" />
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div id="header-placeholder"></div>
 
-    <main class="page-container">
-        <div class="admin-header">
-            <h1>Painel Administrativo</h1>
-            <span class="admin-badge">Admin</span>
-        </div>
-
-        <div class="admin-layout">
-            <!-- Formulário de adição de produto -->
-            <div class="admin-card">
-                <h2>Adicionar Produto</h2>
-                <form id="add-product-form">
-                    <div class="form-group">
-                        <label for="prod-name">Nome *</label>
-                        <input type="text" id="prod-name" placeholder="Ex: Banana Prata" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="prod-description">Descrição</label>
-                        <textarea id="prod-description" rows="3" placeholder="Descrição do produto"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="prod-price">Preço (R$) *</label>
-                        <input type="number" id="prod-price" step="0.01" min="0" placeholder="0,00" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="prod-category">Categoria *</label>
-                        <select id="prod-category" required>
-                            <option value="">Carregando categorias...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="prod-image">URL da Imagem</label>
-                        <input type="text" id="prod-image" placeholder="https://..." />
-                    </div>
-                    <button type="submit" class="btn-admin-submit">Adicionar Produto</button>
-                    <div id="form-feedback" class="admin-feedback" style="display:none;"></div>
-                </form>
+        <main class="page-container">
+            <div class="admin-header">
+                <h1>Painel Administrativo</h1>
+                <span class="admin-badge">Admin</span>
             </div>
 
-            <!-- Lista de produtos existentes -->
-            <div class="admin-card admin-products-card">
-                <h2>Produtos Cadastrados</h2>
-                <div id="admin-loading" class="loading">Carregando...</div>
-                <table class="admin-table" id="products-table" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nome</th>
-                            <th>Categoria</th>
-                            <th>Preço</th>
-                        </tr>
-                    </thead>
-                    <tbody id="products-tbody"></tbody>
-                </table>
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="produtos">
+                    Produtos
+                </button>
+                <button class="admin-tab" data-tab="usuarios">Usuários</button>
             </div>
-        </div>
-    </main>
 
-    <div id="footer-placeholder"></div>
+            <div id="tab-produtos" class="admin-layout">
+                <div class="admin-card">
+                    <h2>Adicionar Produto</h2>
+                    <form id="add-product-form">
+                        <div class="form-group">
+                            <label for="prod-name">Nome *</label>
+                            <input
+                                type="text"
+                                id="prod-name"
+                                placeholder="Ex: Banana Prata"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-description">Descrição</label>
+                            <textarea
+                                id="prod-description"
+                                rows="3"
+                                placeholder="Descrição do produto"
+                            ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-price">Preço (R$) *</label>
+                            <input
+                                type="number"
+                                id="prod-price"
+                                step="0.01"
+                                min="0"
+                                placeholder="0,00"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-category">Categoria *</label>
+                            <select id="prod-category" required>
+                                <option value="">
+                                    Carregando categorias...
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-image">URL da Imagem</label>
+                            <input
+                                type="text"
+                                id="prod-image"
+                                placeholder="https://..."
+                            />
+                        </div>
+                        <button type="submit" class="btn-admin-submit">
+                            Adicionar Produto
+                        </button>
+                        <div
+                            id="product-feedback"
+                            class="admin-feedback"
+                            style="display: none"
+                        ></div>
+                    </form>
+                </div>
 
-    <script src="/js/main.js"></script>
-    <script>
-        const API = "http://localhost:8000/api/v1";
+                <div class="admin-card admin-products-card">
+                    <h2>Produtos Cadastrados</h2>
+                    <div id="admin-loading" class="loading">Carregando...</div>
+                    <table
+                        class="admin-table"
+                        id="products-table"
+                        style="display: none"
+                    >
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const token = localStorage.getItem("token");
-            const role = localStorage.getItem("role");
+            <div id="tab-usuarios" class="admin-layout" style="display: none">
+                <div class="admin-card">
+                    <h2>Criar Usuário</h2>
+                    <form id="add-user-form">
+                        <div class="form-group">
+                            <label for="user-email">E-mail *</label>
+                            <input
+                                type="email"
+                                id="user-email"
+                                placeholder="usuario@email.com"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-password">Senha *</label>
+                            <input
+                                type="password"
+                                id="user-password"
+                                placeholder="Mínimo 6 caracteres"
+                                minlength="6"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="btn-admin-submit">
+                            Criar Usuário
+                        </button>
+                        <div
+                            id="user-feedback"
+                            class="admin-feedback"
+                            style="display: none"
+                        ></div>
+                    </form>
+                </div>
 
-            if (!token || role !== "admin") {
-                window.location.href = "index.html";
-                return;
-            }
+                <div class="admin-card admin-products-card">
+                    <h2>Usuários Cadastrados</h2>
+                    <div id="users-loading" class="loading">Carregando...</div>
+                    <table
+                        class="admin-table"
+                        id="users-table"
+                        style="display: none"
+                    >
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>E-mail</th>
+                                <th>Role</th>
+                                <th>Ativo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
 
-            loadCategories();
-            loadProducts();
+        <div id="footer-placeholder"></div>
 
-            document.getElementById("add-product-form").addEventListener("submit", handleAddProduct);
-        });
+        <script src="/js/main.js"></script>
+        <script>
+            const API = "http://localhost:8000/api/v1";
 
-        async function loadCategories() {
-            const select = document.getElementById("prod-category");
-            try {
-                const res = await fetch(`${API}/products/categories`);
-                if (!res.ok) throw new Error();
-                const categories = await res.json();
-                select.innerHTML = '<option value="">Selecione a categoria</option>' +
-                    categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
-            } catch {
-                select.innerHTML = '<option value="">Erro ao carregar categorias</option>';
-            }
-        }
+            document.addEventListener("DOMContentLoaded", () => {
+                const token = localStorage.getItem("token");
+                const role = localStorage.getItem("role");
 
-        async function loadProducts() {
-            const loading = document.getElementById("admin-loading");
-            const table = document.getElementById("products-table");
-            const tbody = document.getElementById("products-tbody");
-
-            try {
-                const res = await fetch(`${API}/products/`);
-                if (!res.ok) throw new Error();
-                const products = await res.json();
-
-                loading.style.display = "none";
-                table.style.display = "table";
-
-                if (products.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">Nenhum produto cadastrado.</td></tr>';
+                if (!token || role !== "admin") {
+                    window.location.href = "index.html";
                     return;
                 }
 
-                tbody.innerHTML = products.map(p => `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td>${p.name}</td>
-                        <td>${p.category || "—"}</td>
-                        <td>R$ ${p.price.toFixed(2).replace(".", ",")}</td>
-                    </tr>
-                `).join("");
-            } catch {
-                loading.textContent = "Erro ao carregar produtos.";
-            }
-        }
+                loadCategories();
+                loadProducts();
 
-        async function handleAddProduct(e) {
-            e.preventDefault();
-            const token = localStorage.getItem("token");
-            const feedback = document.getElementById("form-feedback");
-            const submitBtn = e.target.querySelector("button[type=submit]");
+                document
+                    .getElementById("add-product-form")
+                    .addEventListener("submit", handleAddProduct);
+                document
+                    .getElementById("add-user-form")
+                    .addEventListener("submit", handleAddUser);
 
-            const payload = {
-                name: document.getElementById("prod-name").value.trim(),
-                description: document.getElementById("prod-description").value.trim() || null,
-                price: parseFloat(document.getElementById("prod-price").value),
-                category_id: parseInt(document.getElementById("prod-category").value) || null,
-                image_url: document.getElementById("prod-image").value.trim() || null,
-            };
+                document.querySelectorAll(".admin-tab").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        document
+                            .querySelectorAll(".admin-tab")
+                            .forEach((b) => b.classList.remove("active"));
+                        btn.classList.add("active");
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Adicionando...";
+                        const tab = btn.dataset.tab;
+                        document.getElementById("tab-produtos").style.display =
+                            tab === "produtos" ? "grid" : "none";
+                        document.getElementById("tab-usuarios").style.display =
+                            tab === "usuarios" ? "grid" : "none";
 
-            try {
-                const res = await fetch(`${API}/products/`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(payload),
+                        if (tab === "usuarios") loadUsers();
+                    });
                 });
+            });
 
-                if (res.ok) {
-                    showFeedback("Produto adicionado com sucesso!", "success");
-                    e.target.reset();
-                    loadProducts();
-                } else if (res.status === 403) {
-                    showFeedback("Sem permissão para realizar esta ação.", "error");
-                } else {
-                    const err = await res.json().catch(() => ({}));
-                    showFeedback(`Erro: ${err.detail || "Tente novamente."}`, "error");
+            async function loadCategories() {
+                const select = document.getElementById("prod-category");
+                try {
+                    const res = await fetch(`${API}/products/categories`);
+                    if (!res.ok) throw new Error();
+                    const categories = await res.json();
+                    select.innerHTML =
+                        '<option value="">Selecione a categoria</option>' +
+                        categories
+                            .map(
+                                (c) =>
+                                    `<option value="${c.id}">${c.name}</option>`,
+                            )
+                            .join("");
+                } catch {
+                    select.innerHTML =
+                        '<option value="">Erro ao carregar categorias</option>';
                 }
-            } catch {
-                showFeedback("Erro de conexão com a API.", "error");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Adicionar Produto";
             }
-        }
 
-        function showFeedback(message, type) {
-            const el = document.getElementById("form-feedback");
-            el.textContent = message;
-            el.className = `admin-feedback admin-feedback--${type}`;
-            el.style.display = "block";
-            setTimeout(() => { el.style.display = "none"; }, 4000);
-        }
-    </script>
-</body>
+            async function loadProducts() {
+                const loading = document.getElementById("admin-loading");
+                const table = document.getElementById("products-table");
+                const tbody = document.getElementById("products-tbody");
+
+                try {
+                    const res = await fetch(`${API}/products/`);
+                    if (!res.ok) throw new Error();
+                    const products = await res.json();
+
+                    loading.style.display = "none";
+                    table.style.display = "table";
+
+                    tbody.innerHTML =
+                        products.length === 0
+                            ? '<tr><td colspan="4" style="text-align:center;color:#888;">Nenhum produto cadastrado.</td></tr>'
+                            : products
+                                  .map(
+                                      (p) => `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td>${p.category || "—"}</td>
+                            <td>R$ ${p.price.toFixed(2).replace(".", ",")}</td>
+                        </tr>
+                    `,
+                                  )
+                                  .join("");
+                } catch {
+                    loading.textContent = "Erro ao carregar produtos.";
+                }
+            }
+
+            async function handleAddProduct(e) {
+                e.preventDefault();
+                const token = localStorage.getItem("token");
+                const submitBtn = e.target.querySelector("button[type=submit]");
+
+                const payload = {
+                    name: document.getElementById("prod-name").value.trim(),
+                    description:
+                        document
+                            .getElementById("prod-description")
+                            .value.trim() || null,
+                    price: parseFloat(
+                        document.getElementById("prod-price").value,
+                    ),
+                    category_id:
+                        parseInt(
+                            document.getElementById("prod-category").value,
+                        ) || null,
+                    image_url:
+                        document.getElementById("prod-image").value.trim() ||
+                        null,
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Adicionando...";
+
+                try {
+                    const res = await fetch(`${API}/products/`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (res.ok) {
+                        showFeedback(
+                            "product-feedback",
+                            "Produto adicionado com sucesso!",
+                            "success",
+                        );
+                        e.target.reset();
+                        loadProducts();
+                    } else {
+                        const err = await res.json().catch(() => ({}));
+                        showFeedback(
+                            "product-feedback",
+                            `Erro: ${err.detail || "Tente novamente."}`,
+                            "error",
+                        );
+                    }
+                } catch {
+                    showFeedback(
+                        "product-feedback",
+                        "Erro de conexão com a API.",
+                        "error",
+                    );
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Adicionar Produto";
+                }
+            }
+
+            async function loadUsers() {
+                const loading = document.getElementById("users-loading");
+                const table = document.getElementById("users-table");
+                const tbody = document.getElementById("users-tbody");
+                const token = localStorage.getItem("token");
+
+                loading.style.display = "block";
+                table.style.display = "none";
+
+                try {
+                    const res = await fetch(`${API}/users/`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (!res.ok) throw new Error();
+                    const users = await res.json();
+
+                    loading.style.display = "none";
+                    table.style.display = "table";
+
+                    tbody.innerHTML =
+                        users.length === 0
+                            ? '<tr><td colspan="4" style="text-align:center;color:#888;">Nenhum usuário encontrado.</td></tr>'
+                            : users
+                                  .map(
+                                      (u) => `
+                        <tr>
+                            <td>${u.id}</td>
+                            <td>${u.email}</td>
+                            <td><span class="role-badge role-badge--${u.role}">${u.role || "—"}</span></td>
+                            <td>${u.is_active ? "✓" : "✗"}</td>
+                        </tr>
+                    `,
+                                  )
+                                  .join("");
+                } catch {
+                    loading.textContent = "Erro ao carregar usuários.";
+                }
+            }
+
+            async function handleAddUser(e) {
+                e.preventDefault();
+                const token = localStorage.getItem("token");
+                const submitBtn = e.target.querySelector("button[type=submit]");
+
+                const payload = {
+                    email: document.getElementById("user-email").value.trim(),
+                    password: document.getElementById("user-password").value,
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Criando...";
+
+                try {
+                    const res = await fetch(`${API}/users/`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (res.ok) {
+                        showFeedback(
+                            "user-feedback",
+                            "Usuário criado com sucesso!",
+                            "success",
+                        );
+                        e.target.reset();
+                        loadUsers();
+                    } else {
+                        const err = await res.json().catch(() => ({}));
+                        showFeedback(
+                            "user-feedback",
+                            `Erro: ${err.detail || "Tente novamente."}`,
+                            "error",
+                        );
+                    }
+                } catch {
+                    showFeedback(
+                        "user-feedback",
+                        "Erro de conexão com a API.",
+                        "error",
+                    );
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Criar Usuário";
+                }
+            }
+
+            function showFeedback(id, message, type) {
+                const el = document.getElementById(id);
+                el.textContent = message;
+                el.className = `admin-feedback admin-feedback--${type}`;
+                el.style.display = "block";
+                setTimeout(() => {
+                    el.style.display = "none";
+                }, 4000);
+            }
+        </script>
+    </body>
 </html>
