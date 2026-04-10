@@ -15,7 +15,7 @@ async function loadComponent(elementId, componentPath) {
 		const html = await response.text();
 		document.getElementById(elementId).innerHTML = html;
 
-		// Ativar menu mobile após carregar header
+		// Ativa menu mobile após carregar header
 		if (elementId === "header-placeholder") {
 			setupMobileMenu();
 			highlightCurrentPage();
@@ -77,7 +77,7 @@ function handleFormSubmit(e) {
 	}, 3000);
 }
 
-// Consumo da API no Backend
+// Consome API
 async function fetchProducts() {
 	const productList = document.getElementById("product-list");
 	const loading = document.getElementById("loading");
@@ -98,7 +98,7 @@ async function fetchProducts() {
 			const card = document.createElement("div");
 			card.className = "product-card";
 
-			// Usando logo como fallback de imagem
+			// Usa logo como fallback de imagem
 			const imgSrc =
 				product.image_url &&
 				product.image_url !== "images/maca.jpg" &&
