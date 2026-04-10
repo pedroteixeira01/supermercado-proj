@@ -62,7 +62,8 @@ header {
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -70,6 +71,7 @@ header {
     color: var(--text-color);
     font-weight: 500;
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -784,6 +786,161 @@ footer {
     background: var(--secondary-color);
 }
 
+/* ====== ADMIN PANEL ====== */
+
+.admin-link {
+    background-color: #e67e22 !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s !important;
+}
+
+.admin-link:hover {
+    background-color: #d35400 !important;
+    color: var(--white) !important;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.admin-badge {
+    background: #e67e22;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.admin-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    align-items: start;
+}
+
+.admin-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 1.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.admin-card h2 {
+    color: var(--dark-bg);
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light-bg);
+}
+
+.admin-card textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.admin-card textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.admin-card select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+    background: var(--white);
+    cursor: pointer;
+}
+
+.admin-card select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn-admin-submit {
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+}
+
+.btn-admin-submit:hover {
+    background: var(--secondary-color);
+}
+
+.btn-admin-submit:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.admin-feedback {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.admin-feedback--success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.admin-feedback--error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table th {
+    background: var(--light-bg);
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.admin-products-card {
+    overflow-x: auto;
+}
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -820,5 +977,9 @@ footer {
 
     .cart-popup {
         width: 100vw;
+    }
+
+    .admin-layout {
+        grid-template-columns: 1fr;
     }
 }

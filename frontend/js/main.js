@@ -30,8 +30,10 @@ async function loadComponent(elementId, componentPath) {
 
 function checkAuthState() {
 	const token = localStorage.getItem("token");
+	const role = localStorage.getItem("role");
 	const authLink = document.getElementById("auth-link");
 	const cartBtn = document.getElementById("cart-btn");
+	const adminContainer = document.getElementById("admin-link-container");
 
 	if (authLink) {
 		if (token) {
@@ -41,11 +43,15 @@ function checkAuthState() {
 				e.preventDefault();
 				localStorage.removeItem("token");
 				localStorage.removeItem("cart");
+				localStorage.removeItem("role");
 				window.location.reload();
 			});
 			if (cartBtn) {
 				cartBtn.style.display = "flex";
 				updateCartUI();
+			}
+			if (adminContainer && role === "admin") {
+				adminContainer.style.display = "";
 			}
 		} else {
 			authLink.textContent = "Login";

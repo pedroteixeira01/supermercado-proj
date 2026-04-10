@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app import schemas
+from app.api import deps
 from app.core import security
 from app.core.config import settings
 from app.db import models
@@ -40,3 +41,14 @@ def login_access_token(
         ),
         "token_type": "bearer",
     }
+
+
+@router.get("/me", response_model=schemas.UserMe)
+def read_me(
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    return schemas.UserMe(
+        id=current_user.id,
+        email=current_user.email,
+        role=current_user.role.name if current_user.role else None,
+    )

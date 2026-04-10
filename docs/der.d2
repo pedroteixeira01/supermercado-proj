@@ -1,5 +1,6 @@
 direction: right
 
+# ── Autenticação ─────────────────────────────────────────────
 Role: {
   shape: sql_table
   id: Integer {constraint: primary_key}
@@ -15,25 +16,9 @@ User: {
   role_id: Integer {constraint: foreign_key}
 }
 
-Role.id -> User.role_id
+Role.id -> User.role_id: {label: "1..N"}
 
-Store: {
-  shape: sql_table
-  id: Integer {constraint: primary_key}
-  name: String
-  address: String
-}
-
-Employee: {
-  shape: sql_table
-  id: Integer {constraint: primary_key}
-  name: String
-  position: String
-  store_id: Integer {constraint: foreign_key}
-}
-
-Store.id -> Employee.store_id
-
+# ── Catálogo ──────────────────────────────────────────────────
 Category: {
   shape: sql_table
   id: Integer {constraint: primary_key}
@@ -59,8 +44,8 @@ Product: {
   supplier_id: Integer {constraint: foreign_key}
 }
 
-Category.id -> Product.category_id
-Supplier.id -> Product.supplier_id
+Category.id -> Product.category_id: {label: "1..N"}
+Supplier.id -> Product.supplier_id: {label: "1..N"}
 
 Promotion: {
   shape: sql_table
@@ -77,8 +62,24 @@ PromotionProduct: {
   product_id: Integer {constraint: primary_key; constraint: foreign_key}
 }
 
-Promotion.id -> PromotionProduct.promotion_id
-Product.id -> PromotionProduct.product_id
+Promotion.id -> PromotionProduct.promotion_id: {label: "N..N"}
+Product.id -> PromotionProduct.product_id: {label: "N..N"}
+
+# ── Estoque / Loja ────────────────────────────────────────────
+Store: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  address: String
+}
+
+Employee: {
+  shape: sql_table
+  id: Integer {constraint: primary_key}
+  name: String
+  position: String
+  store_id: Integer {constraint: foreign_key}
+}
 
 Inventory: {
   shape: sql_table
@@ -88,9 +89,11 @@ Inventory: {
   quantity: Integer
 }
 
-Product.id -> Inventory.product_id
-Store.id -> Inventory.store_id
+Store.id -> Employee.store_id: {label: "1..N"}
+Product.id -> Inventory.product_id: {label: "1..N"}
+Store.id -> Inventory.store_id: {label: "1..N"}
 
+# ── Pedidos ───────────────────────────────────────────────────
 Order: {
   shape: sql_table
   id: Integer {constraint: primary_key}
@@ -99,8 +102,6 @@ Order: {
   created_at: DateTime
   status: String
 }
-
-User.id -> Order.user_id
 
 OrderItem: {
   shape: sql_table
@@ -111,9 +112,11 @@ OrderItem: {
   unit_price: Float
 }
 
-Order.id -> OrderItem.order_id
-Product.id -> OrderItem.product_id
+User.id -> Order.user_id: {label: "1..N"}
+Order.id -> OrderItem.order_id: {label: "1..N"}
+Product.id -> OrderItem.product_id: {label: "1..N"}
 
+# ── Conteúdo ──────────────────────────────────────────────────
 News: {
   shape: sql_table
   id: Integer {constraint: primary_key}
