@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - Supermercado Viva</title>
+    <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="page-container">
+        <h1>Nossos Produtos</h1>
+        <p>Conheça nossa seleção de produtos atualizados em tempo real.</p>
+
+        <div id="loading" class="loading">Carregando produtos...</div>
+        <div class="product-grid" id="product-list">
+            <!-- Produtos serão injetados aqui via JS -->
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+        });
+    </script>
+</body>
+</html>
