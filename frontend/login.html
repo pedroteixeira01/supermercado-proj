@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login - Supermercado Viva</title>
+        <link rel="icon" href="/images/logo.svg" type="image/svg+xml" />
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div id="header-placeholder"></div>
+
+        <main class="page-container">
+            <h1>Acesso ao Sistema</h1>
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="email">E-mail:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="username"
+                                required
+                                placeholder="admin@superviva.com"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Senha:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="admin123"
+                            />
+                        </div>
+                        <button type="submit" class="btn">Entrar</button>
+                    </form>
+                    <div id="login-error-msg" class="msg-hidden error-msg">
+                        E-mail ou senha incorretos!
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <h3>Área Restrita</h3>
+                    <p>
+                        O acesso ao sistema é restrito para funcionários e
+                        administradores do Supermercado Viva.
+                    </p>
+                    <p>
+                        Se você esqueceu sua senha, por favor, entre em contato
+                        com o suporte de TI internamente.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <div id="footer-placeholder"></div>
+
+        <script src="/js/main.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const loginForm = document.getElementById("loginForm");
+                if (loginForm) {
+                    loginForm.addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(loginForm);
+
+                        try {
+                            const response = await fetch(
+                                "http://localhost:8000/api/v1/auth/login/access-token",
+                                {
+                                    method: "POST",
+                                    body: formData,
+                                },
+                            );
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                localStorage.setItem(
+                                    "token",
+                                    data.access_token,
+                                );
+                                window.location.href = "index.html";
+                            } else {
+                                const errorMsg =
+                                    document.getElementById("login-error-msg");
+                                errorMsg.style.display = "block";
+                                errorMsg.style.background = "#f8d7da";
+                                errorMsg.style.color = "#721c24";
+                                setTimeout(() => {
+                                    errorMsg.style.display = "none";
+                                }, 3000);
+                            }
+                        } catch (error) {
+                            console.error("Erro de login:", error);
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>
