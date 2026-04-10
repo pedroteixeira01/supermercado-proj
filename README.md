@@ -6,30 +6,72 @@ Projeto completo de desenvolvimento web para uma empresa fictícia do setor de s
 
 ```
 company_site/
-├── frontend/          # Aplicação web estática (Nginx)
-├── backend/           # API REST (FastAPI + SQLite)
-├── docs/              # Documentação (DER em D2)
+├── frontend/
+│   ├── components/
+│   │   ├── header.html        # Header injetado dinamicamente
+│   │   └── footer.html        # Footer injetado dinamicamente
+│   ├── css/
+│   │   └── style.css
+│   ├── images/
+│   │   └── logo.svg
+│   ├── js/
+│   │   ├── main.js            # Compartilhado — header, carrinho, autenticação
+│   │   ├── login.js           # Lógica da página de login
+│   │   ├── produtos.js        # Lógica da página de produtos
+│   │   ├── checkout.js        # Lógica da página de checkout
+│   │   └── painel.js          # Lógica do painel administrativo
+│   ├── index.html
+│   ├── login.html
+│   ├── produtos.html
+│   ├── checkout.html
+│   ├── painel.html
+│   ├── novidades.html
+│   ├── sobre.html
+│   └── contato.html
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── deps.py        # Dependências de autenticação e autorização
+│   │   │   └── v1/endpoints/
+│   │   │       ├── auth.py
+│   │   │       ├── products.py
+│   │   │       ├── orders.py
+│   │   │       └── users.py
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   └── security.py    # JWT e hashing de senhas
+│   │   ├── db/
+│   │   │   ├── database.py
+│   │   │   └── models.py      # Modelos SQLAlchemy
+│   │   ├── schemas/           # Schemas Pydantic
+│   │   └── factory.py         # Criação da aplicação FastAPI
+│   ├── alembic/               # Migrações do banco de dados
+│   ├── tests/
+│   └── pyproject.toml
+├── docs/
+│   ├── der.d2                 # Diagrama ER (formato D2)
+│   └── der.png
 └── docker-compose.yml
 ```
 
 ### Frontend (`/frontend`)
 
-7 páginas servidas via Nginx, componentizadas com JavaScript (header e footer injetados dinamicamente):
+7 páginas servidas via Nginx. Header e footer são componentes reutilizáveis injetados via JavaScript. Cada página possui seu próprio arquivo `.js` com a lógica específica, sem scripts inline no HTML.
 
-| Página | Descrição |
-|---|---|
-| `index.html` | Página inicial com hero e cards de destaque |
-| `produtos.html` | Catálogo de produtos com botão "Adicionar ao Carrinho" |
-| `checkout.html` | Resumo do pedido e confirmação (requer login) |
-| `painel.html` | Painel administrativo — adicionar produtos (requer role `admin`) |
-| `login.html` | Autenticação de usuários |
-| `novidades.html` | Feed de notícias |
-| `sobre.html` / `contato.html` | Institucional e formulário de contato |
+| Página | Script | Descrição |
+|---|---|---|
+| `index.html` | — | Página inicial com hero e cards de destaque |
+| `produtos.html` | `produtos.js` | Catálogo com botão "Adicionar ao Carrinho" |
+| `checkout.html` | `checkout.js` | Resumo e confirmação do pedido (requer login) |
+| `painel.html` | `painel.js` | Painel admin — gerenciar produtos e usuários (requer role `admin`) |
+| `login.html` | `login.js` | Autenticação de usuários |
+| `novidades.html` | — | Feed de notícias |
+| `sobre.html` / `contato.html` | — | Institucional e formulário de contato |
 
-**Funcionalidades do frontend:**
-- Carrinho persistido em `localStorage` (add, remover, alterar quantidade)
-- Popup lateral do carrinho com total e acesso ao checkout
-- Link "Painel" no navbar visível apenas para admins
+**Funcionalidades:**
+- Carrinho persistido em `localStorage` (adicionar, remover, alterar quantidade)
+- Popup lateral do carrinho com total e botão de checkout
+- Link "Painel" no navbar visível apenas para usuários com role `admin`
 - Redirecionamento automático para login em páginas protegidas
 
 ### Backend (`/backend`)
@@ -45,8 +87,10 @@ API REST com FastAPI. Banco de dados SQLite gerenciado por SQLAlchemy e Alembic.
 | `GET` | `/api/v1/products/` | — | Lista todos os produtos |
 | `GET` | `/api/v1/products/{id}` | — | Detalhe de um produto |
 | `POST` | `/api/v1/products/` | JWT + role `admin` | Cria novo produto |
-| `GET` | `/api/v1/products/categories` | — | Lista categorias |
+| `GET` | `/api/v1/products/categories` | — | Lista categorias disponíveis |
 | `POST` | `/api/v1/orders/` | JWT | Cria pedido para o usuário logado |
+| `GET` | `/api/v1/users/` | JWT + role `admin` | Lista todos os usuários |
+| `POST` | `/api/v1/users/` | JWT + role `admin` | Cria novo usuário comum |
 
 Documentação interativa (Swagger UI): [http://localhost:8000/docs](http://localhost:8000/docs)
 
@@ -82,7 +126,7 @@ cd backend
 uv venv
 uv pip install -e .
 
-# Aplicar migrações (cria e popula o banco)
+# Aplicar migrações (cria e popula o banco de dados)
 uv run alembic upgrade head
 
 # Iniciar servidor
@@ -106,7 +150,7 @@ uv run pytest tests/
 
 ## Credenciais de Teste
 
-O banco é populado automaticamente via migrations (seeds) com produtos, categorias e um usuário administrador.
+O banco é populado automaticamente via migrations com produtos, categorias e um usuário administrador.
 
 | Campo | Valor |
 |---|---|
@@ -114,7 +158,7 @@ O banco é populado automaticamente via migrations (seeds) com produtos, categor
 | Senha | `admin123` |
 | Role | `admin` |
 
-> O usuário admin tem acesso ao **Painel Administrativo** e pode adicionar produtos via interface web ou diretamente pela API.
+O usuário admin tem acesso ao **Painel Administrativo**, onde pode adicionar produtos e criar novos usuários comuns (role `user`).
 
 ---
 
@@ -122,11 +166,10 @@ O banco é populado automaticamente via migrations (seeds) com produtos, categor
 
 O diagrama entidade-relacionamento completo está em [`docs/der.d2`](docs/der.d2).
 
-**Entidades principais:**
-
-- **Role / User** — autenticação com JWT e controle de acesso por papel (`user`, `admin`)
-- **Category / Supplier / Product** — catálogo de produtos
-- **Promotion / PromotionProduct** — promoções com relacionamento N:N com produtos
-- **Store / Employee / Inventory** — gestão de estoque por loja
-- **Order / OrderItem** — pedidos realizados por usuários autenticados
-- **News / ContactMessage** — conteúdo e mensagens de contato
+| Grupo | Entidades |
+|---|---|
+| Autenticação | `Role`, `User` |
+| Catálogo | `Category`, `Supplier`, `Product`, `Promotion`, `PromotionProduct` |
+| Estoque | `Store`, `Employee`, `Inventory` |
+| Pedidos | `Order`, `OrderItem` |
+| Conteúdo | `News`, `ContactMessage` |
